@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.combinatorial_optimization.MainPackage.MainController">
+    <children>
+        <Button layoutX="414.0" layoutY="240.0" mnemonicParsing="false" onAction="#generateData" text="Create data" />
+      <TextField fx:id="pathField" editable="false" layoutX="126.0" layoutY="293.0" prefHeight="25.0" prefWidth="410.0" />
+      <Button layoutX="207.0" layoutY="240.0" mnemonicParsing="false" onAction="#getOwnData" text="input your own data" />
+      <Button fx:id="greedyAlgorithmButton" disable="true" layoutX="253.0" layoutY="341.0" mnemonicParsing="false" onAction="#runGreedyAlgorithm" text="test greedy algorithm" />
+    </children>
+</AnchorPane>

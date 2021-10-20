@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.combinatorial_optimization/com.example.combinatorial_optimization.HelloApplication
+                                com.example.combinatorial_optimization/com.example.combinatorial_optimization.MainApplication
                             </mainClass>
                         </configuration>
                     </execution>
