@@ -1,0 +1,18 @@
+.button
+{
+    -fx-background-color: black;
+    -fx-font-family: "MV Boli";
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-pref-width: 200px;
+}
+
+.button:hover
+{
+    -fx-text-fill: #2fff00;
+}
+
+#background
+{
+    -fx-background-color: black;
+}
