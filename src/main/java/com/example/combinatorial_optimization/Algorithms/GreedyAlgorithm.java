@@ -1,29 +1,24 @@
 package com.example.combinatorial_optimization.Algorithms;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 
 public class GreedyAlgorithm {
 
-    private String dataPathToTest;
+    private final String dataPathToTest;
     private int amountOfNumbers;
-    private HashMap<String, Integer[]> data = new HashMap<>();
-    private ArrayList<String> keys = new ArrayList<>();
-    private ArrayList<String> roadPoints = new ArrayList<>();
+    private final HashMap<String, Integer[]> data = new HashMap<>();
+    private final ArrayList<String> keys = new ArrayList<>();
+    private final ArrayList<String> roadPoints = new ArrayList<>();
 
     public GreedyAlgorithm(String dataPathToTest) {
         this.dataPathToTest = dataPathToTest;
     }
 
-    public ArrayList<String> getRoadPoints() {
-        return roadPoints;
-    }
+    public ArrayList<String> getRoadPoints() {return roadPoints;}
 
     public int getAmountOfNumbers() {
         return amountOfNumbers;
@@ -33,18 +28,13 @@ public class GreedyAlgorithm {
         return data;
     }
 
-    public ArrayList<String> getKeys() {
-        return keys;
-    }
-
-
-
     public void readDataFromFile() {
         try {
             FileReader reader = new FileReader(dataPathToTest);
             BufferedReader bufferedReader = new BufferedReader(reader);
             String line = bufferedReader.readLine();
             amountOfNumbers = Integer.parseInt(line);
+
             for(int i = 1; i <= amountOfNumbers; i++){
                 line = bufferedReader.readLine();
                 String[] points = line.split(" ");
@@ -71,16 +61,20 @@ public class GreedyAlgorithm {
 
     private void findTheClosestPoint(int xPos, int yPos){
         if(keys.size()>0){
-            double minLength = 99999;
             String nextPoint = "";
+            double minLength = 99999;
             int xNextPos = 0;
             int yNextPos = 0;
+
             for (String point:keys) {
+
                 int xPos2 = data.get(point)[0];
                 int yPos2 = data.get(point)[1];
+
                 double xLength = Math.pow(xPos-xPos2, 2);
                 double yLength = Math.pow(yPos-yPos2, 2);
                 double length = Math.sqrt(xLength+yLength);
+
                 if(length < minLength){
                     minLength = length;
                     nextPoint = point;

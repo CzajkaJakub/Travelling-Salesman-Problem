@@ -13,8 +13,8 @@ public class Generator implements FilesPaths, GeneratorSettings{
         Random random = new Random();
 
         for(int x = 1; x <= amountOfNumbers; x++){
-            int randomX = random.nextInt(1000) + 50;
-            int randomY = random.nextInt(800) + 50;
+            int randomX = random.nextInt(visualizationWidthWindow - 2*margin) + margin;
+            int randomY = random.nextInt(visualizationHeightWindow - 2*margin) + margin;
             String dataLine = String.format("%d %d %d\n", x, randomX, randomY);
             data.append(dataLine);
         }

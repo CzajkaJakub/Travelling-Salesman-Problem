@@ -6,11 +6,9 @@ import com.example.combinatorial_optimization.MainApplication;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
@@ -18,11 +16,10 @@ import javafx.stage.Stage;
 
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 
-public class MainController implements FilesPaths, ScenesTitles {
+public class MainController implements FilesPaths, ScenesTitles, VisualizationSettings {
 
     @FXML
     TextField pathField;
@@ -38,13 +35,10 @@ public class MainController implements FilesPaths, ScenesTitles {
         MainController.stage = stage;
     }
 
-    public static Stage getStage() {
-        return stage;
-    }
-
     public static void changeScene(String fxmlPath, String frameTitle) throws IOException {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(fxmlPath));
         Scene newScene = new Scene(loader.load());
+        stage.getIcons().add(applicationIcon);
         stage.resizableProperty().set(false);
         stage.setTitle(frameTitle);
         stage.setScene(newScene);
@@ -55,18 +49,18 @@ public class MainController implements FilesPaths, ScenesTitles {
     public void generateData() throws IOException {
         Generator generator = new Generator();
         generator.generateNumbers();
-        openFile();
+        dataPathToTest = dataFilePath;
+        pathField.setText(dataFilePath);
+        greedyAlgorithmButton.setDisable(false);
     }
 
-    private void openFile(){
+    @FXML
+    public void showDataDictionary(){
         try {
             Desktop desktop = Desktop.getDesktop();
             desktop.open(new File(dataFileDictionary));
-            dataPathToTest = dataFilePath;
-            pathField.setText(dataFilePath);
-            greedyAlgorithmButton.setDisable(false);
         } catch (IOException e) {
-            e.printStackTrace(); // blad sciezki
+            System.out.println("Błąd ścieżki");
         }
     }
 
@@ -84,7 +78,7 @@ public class MainController implements FilesPaths, ScenesTitles {
     }
 
     @FXML
-    public void runGreedyAlgorithm() throws IOException {
+    public void runGreedyAlgorithm() {
         GreedyAlgorithm greedyAlgorithm = new GreedyAlgorithm(dataPathToTest);
         greedyAlgorithm.readDataFromFile();
         greedyAlgorithm.findRoad();
@@ -93,61 +87,52 @@ public class MainController implements FilesPaths, ScenesTitles {
 
     private void showVisualization(GreedyAlgorithm greedyAlgorithm) {
         Group root = new Group();
-        Scene scene = new Scene(root, 1100, 900);
+        Scene scene = new Scene(root, visualizationWindowWidth, visualizationWindowHeight, backgroundColor);
+        stage.setTitle(visualizationTitle);
 
         //draw circles
         for (String key: greedyAlgorithm.getRoadPoints()) {
             int xPos = greedyAlgorithm.getData().get(key)[0];
             int yPos = greedyAlgorithm.getData().get(key)[1];
-            Circle circle = new Circle();
-            circle.setCenterY(yPos);
-            circle.setCenterX(xPos);
-            circle.setRadius(3);
-            circle.setFill(new Color(0,0, 1, 1));
-            root.getChildren().add(circle);
-        }
-
-        //draw lines
-        for(int i = 0; i < greedyAlgorithm.getAmountOfNumbers()-1; i++){
-            int xPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i))[0];
-            int yPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i))[1];
-            int xPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i+1))[0];
-            int yPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i+1))[1];
-
-            Line line = new Line();
-            line.setStrokeWidth(2);
-            line.setOpacity(1);
-            line.setFill(new Color(1,1,0,1));
-            line.setStroke(Color.RED);
-            line.setStartX(xPos1);
-            line.setStartY(yPos1);
-            line.setEndX(xPos2);
-            line.setEndY(yPos2);
-            root.getChildren().add(line);
+            createCircles(root, xPos, yPos);
         }
 
         int xPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(greedyAlgorithm.getAmountOfNumbers()-1))[0];
         int yPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(greedyAlgorithm.getAmountOfNumbers()-1))[1];
         int xPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(0))[0];
         int yPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(0))[1];
+        createLine(root, xPos1, xPos2, yPos1, yPos2);
 
+        //draw lines
+        for(int i = 0; i < greedyAlgorithm.getAmountOfNumbers()-1; i++) {
+            xPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i))[0];
+            yPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i))[1];
+            xPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i + 1))[0];
+            yPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i + 1))[1];
+            createLine(root, xPos1, xPos2, yPos1, yPos2);
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void createLine(Group root, int xPos1, int xPos2, int yPos1, int yPos2){
         Line line = new Line();
-        line.setStrokeWidth(2);
+        line.setStrokeWidth(linesStroke);
         line.setOpacity(1);
-        line.setFill(new Color(1,1,0,1));
-        line.setStroke(Color.RED);
+        line.setStroke(linesColor);
         line.setStartX(xPos1);
         line.setStartY(yPos1);
         line.setEndX(xPos2);
         line.setEndY(yPos2);
         root.getChildren().add(line);
+    }
 
-
-
-
-
-
-        stage.setScene(scene);
-        stage.show();
+    private void createCircles(Group root, int xPos, int yPos){
+        Circle circle = new Circle();
+        circle.setCenterY(yPos);
+        circle.setCenterX(xPos);
+        circle.setRadius(circlesRadius);
+        circle.setFill(circlesColor);
+        root.getChildren().add(circle);
     }
 }
