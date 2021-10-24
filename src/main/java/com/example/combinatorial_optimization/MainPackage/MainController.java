@@ -9,8 +9,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -90,11 +93,22 @@ public class MainController implements FilesPaths, ScenesTitles, VisualizationSe
         Scene scene = new Scene(root, visualizationWindowWidth, visualizationWindowHeight, backgroundColor);
         stage.setTitle(visualizationTitle);
 
+
+
         //draw circles
         for (String key: greedyAlgorithm.getRoadPoints()) {
             int xPos = greedyAlgorithm.getData().get(key)[0];
             int yPos = greedyAlgorithm.getData().get(key)[1];
             createCircles(root, xPos, yPos);
+        }
+
+        //draw lines
+        for(int i = 0; i < greedyAlgorithm.getAmountOfNumbers()-1; i++) {
+            int xPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i))[0];
+            int yPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i))[1];
+            int xPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i + 1))[0];
+            int yPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i + 1))[1];
+            createLine(root, xPos1, xPos2, yPos1, yPos2);
         }
 
         int xPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(greedyAlgorithm.getAmountOfNumbers()-1))[0];
@@ -103,14 +117,15 @@ public class MainController implements FilesPaths, ScenesTitles, VisualizationSe
         int yPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(0))[1];
         createLine(root, xPos1, xPos2, yPos1, yPos2);
 
-        //draw lines
-        for(int i = 0; i < greedyAlgorithm.getAmountOfNumbers()-1; i++) {
-            xPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i))[0];
-            yPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i))[1];
-            xPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i + 1))[0];
-            yPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i + 1))[1];
-            createLine(root, xPos1, xPos2, yPos1, yPos2);
-        }
+        // draw length
+        Text length = new Text();
+        length.setText("Road's length : " + greedyAlgorithm.getRoadLength() + "px");
+        length.setX(10);
+        length.setY(40);
+        length.setFont(new Font("MV Boli", 40));
+        length.setFill(Color.WHITE);
+        root.getChildren().add(length);
+
         stage.setScene(scene);
         stage.show();
     }

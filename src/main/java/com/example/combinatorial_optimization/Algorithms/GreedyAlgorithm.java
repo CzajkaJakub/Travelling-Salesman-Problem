@@ -13,9 +13,14 @@ public class GreedyAlgorithm {
     private final HashMap<String, Integer[]> data = new HashMap<>();
     private final ArrayList<String> keys = new ArrayList<>();
     private final ArrayList<String> roadPoints = new ArrayList<>();
+    private int roadLength = 0;
 
     public GreedyAlgorithm(String dataPathToTest) {
         this.dataPathToTest = dataPathToTest;
+    }
+
+    public int getRoadLength() {
+        return roadLength;
     }
 
     public ArrayList<String> getRoadPoints() {return roadPoints;}
@@ -82,6 +87,7 @@ public class GreedyAlgorithm {
                     yNextPos = yPos2;
                 }
             }
+            roadLength += minLength;
             keys.remove(nextPoint);
             roadPoints.add(nextPoint);
             findTheClosestPoint(xNextPos, yNextPos);

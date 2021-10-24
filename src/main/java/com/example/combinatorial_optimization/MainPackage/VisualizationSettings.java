@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 public interface VisualizationSettings {
 
-    int visualizationWindowWidth = 1100;
+    int visualizationWindowWidth = 1000;
     int visualizationWindowHeight = 900;
 
     Color backgroundColor = Color.BLACK;
