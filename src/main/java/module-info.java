@@ -9,5 +9,7 @@ module com.example.combinatorial_optimization {
     exports com.example.combinatorial_optimization.MainPackage;
     exports com.example.combinatorial_optimization;
     opens com.example.combinatorial_optimization to javafx.fxml;
+    exports com.example.combinatorial_optimization.DataReader;
+    opens com.example.combinatorial_optimization.DataReader to javafx.fxml;
 
 }

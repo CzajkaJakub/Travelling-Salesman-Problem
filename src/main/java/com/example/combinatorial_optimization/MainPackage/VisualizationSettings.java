@@ -5,7 +5,8 @@ import javafx.scene.paint.Color;
 public interface VisualizationSettings {
 
     int visualizationWindowWidth = 1000;
-    int visualizationWindowHeight = 900;
+    int visualizationWindowHeight = 700;
+
 
     Color backgroundColor = Color.BLACK;
     Color circlesColor = Color.WHITESMOKE;
@@ -13,4 +14,6 @@ public interface VisualizationSettings {
 
     Color linesColor = Color.RED;
     int linesStroke = 1;
+
+    int margin = 30;
 }

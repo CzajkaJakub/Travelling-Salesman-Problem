@@ -2,6 +2,9 @@ package com.example.combinatorial_optimization.MainPackage;
 
 import com.example.combinatorial_optimization.Algorithms.GreedyAlgorithm;
 import com.example.combinatorial_optimization.DataGeneration.Generator;
+import com.example.combinatorial_optimization.DataReader.DataReader;
+import com.example.combinatorial_optimization.DataReader.Point;
+import com.example.combinatorial_optimization.DataReader.SetOfPoints;
 import com.example.combinatorial_optimization.MainApplication;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,11 +12,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -21,6 +21,8 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainController implements FilesPaths, ScenesTitles, VisualizationSettings {
 
@@ -82,72 +84,58 @@ public class MainController implements FilesPaths, ScenesTitles, VisualizationSe
 
     @FXML
     public void runGreedyAlgorithm() {
-        GreedyAlgorithm greedyAlgorithm = new GreedyAlgorithm(dataPathToTest);
-        greedyAlgorithm.readDataFromFile();
+        DataReader dataReader = new DataReader(dataPathToTest);
+        dataReader.readDataFromFile();
+        SetOfPoints setOfPoints = dataReader.getSetOfPoints();
+        GreedyAlgorithm greedyAlgorithm = new GreedyAlgorithm(setOfPoints);
         greedyAlgorithm.findRoad();
         showVisualization(greedyAlgorithm);
     }
 
     private void showVisualization(GreedyAlgorithm greedyAlgorithm) {
         Group root = new Group();
-        Scene scene = new Scene(root, visualizationWindowWidth, visualizationWindowHeight, backgroundColor);
+        Scene scene = new Scene(root, visualizationWindowWidth + 2 * margin, visualizationWindowHeight + 2 * margin, backgroundColor);
         stage.setTitle(visualizationTitle);
-
-
-
-        //draw circles
-        for (String key: greedyAlgorithm.getRoadPoints()) {
-            int xPos = greedyAlgorithm.getData().get(key)[0];
-            int yPos = greedyAlgorithm.getData().get(key)[1];
-            createCircles(root, xPos, yPos);
-        }
-
-        //draw lines
-        for(int i = 0; i < greedyAlgorithm.getAmountOfNumbers()-1; i++) {
-            int xPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i))[0];
-            int yPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i))[1];
-            int xPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i + 1))[0];
-            int yPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(i + 1))[1];
-            createLine(root, xPos1, xPos2, yPos1, yPos2);
-        }
-
-        int xPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(greedyAlgorithm.getAmountOfNumbers()-1))[0];
-        int yPos1 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(greedyAlgorithm.getAmountOfNumbers()-1))[1];
-        int xPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(0))[0];
-        int yPos2 = greedyAlgorithm.getData().get(greedyAlgorithm.getRoadPoints().get(0))[1];
-        createLine(root, xPos1, xPos2, yPos1, yPos2);
-
-        // draw length
-        Text length = new Text();
-        length.setText("Road's length : " + greedyAlgorithm.getRoadLength() + "px");
-        length.setX(10);
-        length.setY(40);
-        length.setFont(new Font("MV Boli", 40));
-        length.setFill(Color.WHITE);
-        root.getChildren().add(length);
-
+        createCircles(root, greedyAlgorithm.getData());
+        createLine(root, greedyAlgorithm.getGreedyRoad(), greedyAlgorithm.getData());
         stage.setScene(scene);
         stage.show();
+
+        System.out.println(greedyAlgorithm.getTotalLength());
     }
 
-    private void createLine(Group root, int xPos1, int xPos2, int yPos1, int yPos2){
-        Line line = new Line();
-        line.setStrokeWidth(linesStroke);
-        line.setOpacity(1);
-        line.setStroke(linesColor);
-        line.setStartX(xPos1);
-        line.setStartY(yPos1);
-        line.setEndX(xPos2);
-        line.setEndY(yPos2);
-        root.getChildren().add(line);
+    private void createLine(Group root, ArrayList<String> road, HashMap<String, Point> data){
+        String city;
+        String nextCity;
+        Line line;
+        for(int i = 0; i < road.size()-1; i++) {
+            line = new Line();
+            city = road.get(i);
+            nextCity = road.get(i+1);
+            line.setStrokeWidth(linesStroke);
+            line.setOpacity(1);
+            line.setStroke(linesColor);
+            line.setStartX(data.get(city).getX() + margin);
+            line.setStartY(data.get(city).getY() + margin);
+            line.setEndX(data.get(nextCity).getX() + margin);
+            line.setEndY(data.get(nextCity).getY() + margin);
+            root.getChildren().add(line);
+        }
     }
 
-    private void createCircles(Group root, int xPos, int yPos){
-        Circle circle = new Circle();
-        circle.setCenterY(yPos);
-        circle.setCenterX(xPos);
-        circle.setRadius(circlesRadius);
-        circle.setFill(circlesColor);
-        root.getChildren().add(circle);
+    private void createCircles(Group root, HashMap<String, Point> road){
+        double cityX;
+        double cityY;
+        Circle circle;
+        for (String city: road.keySet()) {
+            circle = new Circle();
+            cityX = road.get(city).getX() + margin;
+            cityY = road.get(city).getY() + margin;
+            circle.setCenterY(cityY);
+            circle.setCenterX(cityX);
+            circle.setRadius(circlesRadius);
+            circle.setFill(circlesColor);
+            root.getChildren().add(circle);
+        }
     }
 }

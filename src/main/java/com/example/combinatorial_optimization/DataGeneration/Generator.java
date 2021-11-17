@@ -13,8 +13,8 @@ public class Generator implements FilesPaths, GeneratorSettings, VisualizationSe
         StringBuilder data = new StringBuilder(amountOfNumbers + "\n");
         Random random = new Random();
         for(int x = 1; x <= amountOfNumbers; x++){
-            int randomX = random.nextInt(visualizationWindowWidth - 2*margin) + margin;
-            int randomY = random.nextInt(visualizationWindowHeight - 2*margin) + margin;
+            int randomX = random.nextInt(visualizationWindowWidth);
+            int randomY = random.nextInt(visualizationWindowHeight);
             String dataLine = String.format("%d %d %d\n", x, randomX, randomY);
             data.append(dataLine);
         }
