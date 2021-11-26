@@ -26,7 +26,7 @@ public class DataReader {
             int amountOfCities = Integer.parseInt(bufferedReader.readLine());
             setOfPoints.setAmountOfCities(amountOfCities);
             for(int i = 1; i <= setOfPoints.getAmountOfCities(); i++){
-                String[] line = bufferedReader.readLine().split(" ");
+                String[] line = bufferedReader.readLine().trim().split(" ");
                 point = new Point();
                 point.setCityName(line[0]);
                 point.setX(Double.parseDouble(line[1]));
