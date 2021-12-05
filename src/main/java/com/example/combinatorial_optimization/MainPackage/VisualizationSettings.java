@@ -12,8 +12,14 @@ public interface VisualizationSettings {
     Color circlesColor = Color.WHITESMOKE;
     int circlesRadius = 3;
 
+    Color textColor = Color.YELLOW;
     Color linesColor = Color.RED;
     int linesStroke = 1;
+
+    String labelType = "MV Boli";
+    int fontSize = 20;
+    int xLabelMargin = 0;
+    int yLabelMargin = 20;
 
     int margin = 30;
 }

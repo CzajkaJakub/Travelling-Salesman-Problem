@@ -18,7 +18,6 @@ public class AntAlgorithm implements Algorithm{
     private  double startY;
 
 
-
     public AntAlgorithm(SetOfPoints setOfPoints) {
         antRoad = new ArrayList<>();
         this.citiesToVisit = setOfPoints.getCities();
