@@ -1,5 +1,6 @@
-package com.example.combinatorial_optimization.Algorithms;
+package com.example.combinatorial_optimization.Algorithms.Greedy;
 
+import com.example.combinatorial_optimization.Algorithms.Algorithm;
 import com.example.combinatorial_optimization.DataReader.Point;
 import com.example.combinatorial_optimization.DataReader.SetOfPoints;
 
