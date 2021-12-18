@@ -7,7 +7,6 @@ public interface VisualizationSettings {
     int visualizationWindowWidth = 1000;
     int visualizationWindowHeight = 700;
 
-
     Color backgroundColor = Color.BLACK;
     Color circlesColor = Color.WHITESMOKE;
     int circlesRadius = 3;
