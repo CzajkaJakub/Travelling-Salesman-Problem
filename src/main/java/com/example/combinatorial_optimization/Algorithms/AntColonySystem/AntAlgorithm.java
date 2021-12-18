@@ -3,12 +3,13 @@ package com.example.combinatorial_optimization.Algorithms.AntColonySystem;
 import com.example.combinatorial_optimization.Algorithms.Algorithm;
 import com.example.combinatorial_optimization.DataReader.Point;
 import com.example.combinatorial_optimization.DataReader.SetOfPoints;
+import com.example.combinatorial_optimization.Settings.Settings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class AntAlgorithm implements Algorithm, AntSettings {
+public class AntAlgorithm implements Algorithm, Settings {
 
     private ArrayList<String> finalRoad;
     private final ArrayList<String> cities;
@@ -57,7 +58,7 @@ public class AntAlgorithm implements Algorithm, AntSettings {
         double min = 99999999999.0;
         Random random = new Random();
 
-        for(int i = 1; i <= colony; i++){
+        for(int i = 1; i <= antColony; i++){
             System.out.println(i);
             Ant ant = new Ant(cities, data, graphCost, pheromoneLevel);
             ant.placeAnt(random.nextInt(amountOfCities));
@@ -78,7 +79,7 @@ public class AntAlgorithm implements Algorithm, AntSettings {
             HashMap<String, Double> len = new HashMap<>();
             for (String toCity: cities) {
                 if(!fromCity.equals(toCity)){
-                    len.put(toCity, pheromoneLevel.get(fromCity).get(toCity)*vapo);
+                    len.put(toCity, pheromoneLevel.get(fromCity).get(toCity)* vaporization);
                 }else{
                     len.put(toCity, 0.0);
                 }

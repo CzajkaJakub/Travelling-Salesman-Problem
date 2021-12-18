@@ -1,14 +1,13 @@
 package com.example.combinatorial_optimization.Algorithms.AntColonySystem;
 
 import com.example.combinatorial_optimization.DataReader.Point;
+import com.example.combinatorial_optimization.Settings.Settings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Ant implements AntSettings {
+public class Ant implements Settings {
 
     private final ArrayList<String> antRoad;
     private ArrayList<String> citiesToVisit;
@@ -44,7 +43,7 @@ public class Ant implements AntSettings {
             totalLength += graphCost.get(cityName).get(startPoint.getCityName());
 
             for(int x = 0; x < antRoad.size() - 1; x++){
-                double pheromoneLev = pheromoneLevel.get(antRoad.get(x)).get(antRoad.get(x+1)) + wydalaniePheromonu;
+                double pheromoneLev = pheromoneLevel.get(antRoad.get(x)).get(antRoad.get(x+1)) + pheromoneProduction;
                 pheromoneLevel.get(antRoad.get(x)).put(antRoad.get(x+1), pheromoneLev);
                 pheromoneLevel.get(antRoad.get(x+1)).put(antRoad.get(x), pheromoneLev);
             }
@@ -58,8 +57,8 @@ public class Ant implements AntSettings {
             double suma = 0;
             for (String next: citiesToVisit) {
 
-                double iloscFeromonu = Math.pow(pheromoneLevel.get(cityName).get(next), a);
-                double atrakcyjnosc = Math.pow(1/graphCost.get(cityName).get(next), b);
+                double iloscFeromonu = Math.pow(pheromoneLevel.get(cityName).get(next), alpha);
+                double atrakcyjnosc = Math.pow(1/graphCost.get(cityName).get(next), beta);
 
                 suma += iloscFeromonu * atrakcyjnosc;
             }
@@ -68,8 +67,8 @@ public class Ant implements AntSettings {
             ArrayList<Double> chances = new ArrayList<>();
 
             for (String next: citiesToVisit) {
-                double iloscFeromonu = Math.pow(pheromoneLevel.get(cityName).get(next), a);
-                double atrakcyjnosc = Math.pow(1/graphCost.get(cityName).get(next), b);
+                double iloscFeromonu = Math.pow(pheromoneLevel.get(cityName).get(next), alpha);
+                double atrakcyjnosc = Math.pow(1/graphCost.get(cityName).get(next), beta);
                 double praw = iloscFeromonu*atrakcyjnosc/suma;
 
 

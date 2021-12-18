@@ -1,12 +1,12 @@
 package com.example.combinatorial_optimization.DataGeneration;
 
-import com.example.combinatorial_optimization.MainPackage.FilesPaths;
-import com.example.combinatorial_optimization.MainPackage.VisualizationSettings;
+import com.example.combinatorial_optimization.MainPackage.DataPaths;
+import com.example.combinatorial_optimization.Settings.Settings;
 
 import java.io.*;
 import java.util.Random;
 
-public class Generator implements FilesPaths, GeneratorSettings, VisualizationSettings {
+public class Generator implements DataPaths, Settings {
 
     public void generateNumbers() throws IOException {
         FileWriter dataWriter = new FileWriter(dataFilePath);

@@ -1,14 +1,13 @@
 package com.example.combinatorial_optimization;
 
-import com.example.combinatorial_optimization.MainPackage.FilesPaths;
+import com.example.combinatorial_optimization.MainPackage.DataPaths;
 import com.example.combinatorial_optimization.MainPackage.MainController;
-import com.example.combinatorial_optimization.MainPackage.ScenesTitles;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MainApplication extends Application implements FilesPaths, ScenesTitles {
+public class MainApplication extends Application implements DataPaths {
 
     @Override
     public void start(Stage mainStage) throws IOException {
