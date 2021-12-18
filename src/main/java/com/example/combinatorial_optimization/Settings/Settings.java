@@ -22,12 +22,12 @@ public interface Settings {
     int margin = 30;
 
     // data generator settings
-    int amountOfNumbers = 127;
+    int amountOfNumbers = 5;
 
     // ant settings
     double vaporization = 0.5;
     double alpha = 1;
     double beta = 5;
     double pheromoneProduction = 0.8;
-    double antColony = 3000;
+    double antColony = 3;
 }

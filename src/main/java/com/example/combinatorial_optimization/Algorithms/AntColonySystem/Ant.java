@@ -11,90 +11,17 @@ public class Ant implements Settings {
 
     private final ArrayList<String> antRoad;
     private ArrayList<String> citiesToVisit;
-    private final HashMap<String, Point> data;
+    private HashMap<String, Point> data;
     private Point startPoint;
 
     private HashMap<String, HashMap<String, Double>> graphCost;
     private HashMap<String, HashMap<String, Double>> pheromoneLevel;
     private double totalLength;
+    private final Random random;
 
-
-    public Ant(ArrayList<String> cities, HashMap<String, Point> data, HashMap<String, HashMap<String, Double>> graphCost, HashMap<String, HashMap<String, Double>> pheromoneLevel) {
+    public Ant() {
         antRoad = new ArrayList<>();
-        this.data = data;
-        this.graphCost = graphCost;
-        this.pheromoneLevel = pheromoneLevel;
-        citiesToVisit = new ArrayList<>();
-        citiesToVisit.addAll(cities);
-    }
-
-
-    public void placeAnt(int x){
-        this.startPoint = data.get(citiesToVisit.get(x));
-        citiesToVisit.remove(startPoint.getCityName());
-        antRoad.add(startPoint.getCityName());
-        move(startPoint.getCityName());
-    }
-
-    public void move(String cityName) {
-
-        if(citiesToVisit.size() == 0){
-            antRoad.add(startPoint.getCityName());
-            totalLength += graphCost.get(cityName).get(startPoint.getCityName());
-
-            for(int x = 0; x < antRoad.size() - 1; x++){
-                double pheromoneLev = pheromoneLevel.get(antRoad.get(x)).get(antRoad.get(x+1)) + pheromoneProduction;
-                pheromoneLevel.get(antRoad.get(x)).put(antRoad.get(x+1), pheromoneLev);
-                pheromoneLevel.get(antRoad.get(x+1)).put(antRoad.get(x), pheromoneLev);
-            }
-
-        }else{
-
-            Random random = new Random();
-            double x = random.nextDouble();
-
-
-            double suma = 0;
-            for (String next: citiesToVisit) {
-
-                double iloscFeromonu = Math.pow(pheromoneLevel.get(cityName).get(next), alpha);
-                double atrakcyjnosc = Math.pow(1/graphCost.get(cityName).get(next), beta);
-
-                suma += iloscFeromonu * atrakcyjnosc;
-            }
-
-
-            ArrayList<Double> chances = new ArrayList<>();
-
-            for (String next: citiesToVisit) {
-                double iloscFeromonu = Math.pow(pheromoneLevel.get(cityName).get(next), alpha);
-                double atrakcyjnosc = Math.pow(1/graphCost.get(cityName).get(next), beta);
-                double praw = iloscFeromonu*atrakcyjnosc/suma;
-
-
-                if(chances.size() == 0){
-                    chances.add(praw);
-                }else{
-                    praw += chances.get(chances.size() - 1);
-                    chances.add(praw);
-                }
-            }
-
-            double redukcja = 1 - chances.get(chances.size()-1);
-            x -= redukcja;
-
-
-            for (int i = 0; i < citiesToVisit.size(); i++) {
-                if(x <= chances.get(i)){
-                    String nextCity = citiesToVisit.get(i);
-                    antRoad.add(nextCity);
-                    citiesToVisit.remove(nextCity);
-                    totalLength += graphCost.get(cityName).get(nextCity);
-                    move(nextCity);
-                    return;
-                }
-            }
-        }
+        random = new Random();
     }
 
     public ArrayList<String> getAntRoad() {
@@ -104,4 +31,97 @@ public class Ant implements Settings {
     public double getTotalLength() {
         return totalLength;
     }
+
+    public void setCitiesToVisit(ArrayList<String> citiesToVisit) {
+        this.citiesToVisit = new ArrayList<>();
+        this.citiesToVisit.addAll(citiesToVisit);
+    }
+
+    public void setData(HashMap<String, Point> data) {
+        this.data = data;
+    }
+
+    public void setGraphCost(HashMap<String, HashMap<String, Double>> graphCost) {
+        this.graphCost = graphCost;
+    }
+
+    public void setPheromoneLevel(HashMap<String, HashMap<String, Double>> pheromoneLevel) {
+        this.pheromoneLevel = pheromoneLevel;
+    }
+
+    public void placeAntIntoCity(int startCity) {
+        this.startPoint = data.get(citiesToVisit.get(startCity));
+        citiesToVisit.remove(startPoint.getCityName());
+        antRoad.add(startPoint.getCityName());
+    }
+
+    public void generateSolution() {
+        findNextCity(startPoint.getCityName());
+    }
+
+    private void findNextCity(String fromCity) {
+        if (citiesToVisit.size() != 0) {
+            ArrayList<Double> probabilities = createProbabilitiesOfEachRoad(startPoint.getCityName());
+            double randomNumber = random.nextDouble();
+
+            // choose next city with probabilities
+            for (int i = 0; i < citiesToVisit.size(); i++) {
+                if (randomNumber <= probabilities.get(i)) {
+                    String nextCity = citiesToVisit.get(i);
+                    antRoad.add(nextCity);
+                    citiesToVisit.remove(nextCity);
+                    totalLength += graphCost.get(fromCity).get(nextCity);
+                    findNextCity(nextCity);
+                    return;
+                }
+            }
+        }else{
+            antRoad.add(startPoint.getCityName());
+            totalLength += graphCost.get(fromCity).get(startPoint.getCityName());
+            updatePheromoneLevelOnAllRoads();
+        }
+    }
+
+    private ArrayList<Double> createProbabilitiesOfEachRoad(String fromCity) {
+        ArrayList<Double> chances = new ArrayList<>();
+
+        double denominator = 0;
+        double amountOfPheromoneOnRoad;
+        double valueOfRoad;
+        double probability;
+        double numerator;
+
+        // count denominator of probability
+        for (String next : citiesToVisit) {
+            amountOfPheromoneOnRoad = Math.pow(pheromoneLevel.get(fromCity).get(next), alpha);
+            valueOfRoad = Math.pow(1 / graphCost.get(fromCity).get(next), beta);
+            denominator += amountOfPheromoneOnRoad * valueOfRoad;
+        }
+
+        // count probabilities to visit each city
+        for (String next : citiesToVisit) {
+            amountOfPheromoneOnRoad = Math.pow(pheromoneLevel.get(fromCity).get(next), alpha);
+            valueOfRoad = Math.pow(1 / graphCost.get(fromCity).get(next), beta);
+            numerator = amountOfPheromoneOnRoad * valueOfRoad;
+            probability = numerator / denominator;
+            chances.add(probability);
+        }
+
+        for (int i = 1; i < chances.size(); i++) {
+            chances.set(i, chances.get(i - 1) + chances.get(i));
+        }
+        chances.set(chances.size() - 1, 1.0);
+        return chances;
+    }
+
+    private void updatePheromoneLevelOnAllRoads() {
+        double newPheromoneLevel;
+        for(int x = 0; x < antRoad.size() - 1; x++){
+            newPheromoneLevel = pheromoneLevel.get(antRoad.get(x)).get(antRoad.get(x+1)) + pheromoneProduction;
+            pheromoneLevel.get(antRoad.get(x)).put(antRoad.get(x+1), newPheromoneLevel);
+            pheromoneLevel.get(antRoad.get(x+1)).put(antRoad.get(x), newPheromoneLevel);
+        }
+    }
 }
+
+
