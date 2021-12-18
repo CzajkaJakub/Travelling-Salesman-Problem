@@ -54,6 +54,11 @@ public class AntAlgorithm implements Algorithm, Settings {
     @Override
     public void findRoad() {
         for(int i = 1; i <= antColony; i++){
+
+            //progress
+            System.out.printf("Ant Colony algorithm progress : %.1f %c\n", i/antColony * 100, '%');
+            //
+
             createAnt();
             pheromoneVaporization();
             if(ant.getTotalLength() < totalLength){
