@@ -2,7 +2,6 @@ package com.example.combinatorial_optimization.DataReader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 
 public class DataReader {
 
@@ -23,10 +22,15 @@ public class DataReader {
             Point point;
             FileReader reader = new FileReader(dataPathToTest);
             BufferedReader bufferedReader = new BufferedReader(reader);
-            int amountOfCities = Integer.parseInt(bufferedReader.readLine());
+            int amountOfCities = Integer.parseInt(bufferedReader.readLine().strip());
             setOfPoints.setAmountOfCities(amountOfCities);
             for(int i = 1; i <= setOfPoints.getAmountOfCities(); i++){
-                String[] line = bufferedReader.readLine().trim().split(" ");
+                String[] line = bufferedReader.readLine().strip()
+                        .replace("     ", " ")
+                        .replace("    ", " ")
+                        .replace("   ", " ")
+                        .replace("  ", " ")
+                        .split(" ");
                 point = new Point();
                 point.setCityName(line[0]);
                 point.setX(Double.parseDouble(line[1]));
@@ -35,8 +39,8 @@ public class DataReader {
             }
             bufferedReader.close();
             reader.close();
-        } catch (IOException e) {
-            System.out.println("Bład w pliku");
+        } catch (Exception e) {
+            System.out.println("Bład w pliku : " + e.getMessage());
         }
     }
 }

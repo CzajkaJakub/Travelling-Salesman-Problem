@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 public interface Settings {
 
     // size of window
-    int visualizationWindowWidth = 1000;
+    int visualizationWindowWidth = 700;
     int visualizationWindowHeight = 700;
 
     // visualization settings
@@ -22,12 +22,15 @@ public interface Settings {
     int margin = 30;
 
     // data generator settings
-    int amountOfNumbers = 5;
+    int amountOfNumbers = 150;
 
     // ant settings
-    double vaporization = 0.5;
+    double vaporization = 0.9;
     double alpha = 1;
-    double beta = 5;
-    double pheromoneProduction = 0.8;
-    double antColony = 3;
+    double beta = 4;
+    double pheromoneProduction = 1.2;
+    double antColony = 1500;
+
+    // test
+    int amountOfTry = 1;
 }

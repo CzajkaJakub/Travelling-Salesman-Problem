@@ -7,8 +7,7 @@ import com.example.combinatorial_optimization.DataReader.SetOfPoints;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GreedyAlgorithm {
-
+public class GreedyAlgorithm implements Algorithm {
 
     private final String startPoint;
     private final ArrayList<String> greedyRoad;
@@ -17,19 +16,6 @@ public class GreedyAlgorithm {
     private final double startX;
     private final double startY;
     private double totalLength;
-
-    public HashMap<String, Point> getData() {
-        return data;
-    }
-
-    public ArrayList<String> getGreedyRoad() {
-        return greedyRoad;
-    }
-
-    public double getTotalLength() {
-        return totalLength;
-    }
-
 
     public GreedyAlgorithm(SetOfPoints setOfPoints) {
         greedyRoad = new ArrayList<>();
@@ -40,6 +26,22 @@ public class GreedyAlgorithm {
         this.startY = data.get(startPoint).getY();
     }
 
+    @Override
+    public HashMap<String, Point> getData() {
+        return data;
+    }
+
+    @Override
+    public ArrayList<String> getRoad() {
+        return greedyRoad;
+    }
+
+    @Override
+    public double getTotalLength() {
+        return totalLength;
+    }
+
+    @Override
     public void findRoad() {
         citiesToVisit.remove(startPoint);
         greedyRoad.add(startPoint);

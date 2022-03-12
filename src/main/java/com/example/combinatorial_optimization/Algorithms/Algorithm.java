@@ -1,4 +1,3 @@
-
 package com.example.combinatorial_optimization.Algorithms;
 
 import com.example.combinatorial_optimization.DataReader.Point;

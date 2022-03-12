@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class Ant implements Settings {
+public class Ant implements Settings{ // should implement settings
 
     private final ArrayList<String> antRoad;
     private ArrayList<String> citiesToVisit;
@@ -61,7 +61,7 @@ public class Ant implements Settings {
 
     private void findNextCity(String fromCity) {
         if (citiesToVisit.size() != 0) {
-            ArrayList<Double> probabilities = createProbabilitiesOfEachRoad(startPoint.getCityName());
+            ArrayList<Double> probabilities = createProbabilitiesOfEachRoad(fromCity);
             double randomNumber = random.nextDouble();
 
             // choose next city with probabilities
@@ -94,23 +94,23 @@ public class Ant implements Settings {
         // count denominator of probability
         for (String next : citiesToVisit) {
             amountOfPheromoneOnRoad = Math.pow(pheromoneLevel.get(fromCity).get(next), alpha);
-            valueOfRoad = Math.pow(1 / graphCost.get(fromCity).get(next), beta);
+            valueOfRoad = Math.pow(1/graphCost.get(fromCity).get(next), beta);
             denominator += amountOfPheromoneOnRoad * valueOfRoad;
         }
 
         // count probabilities to visit each city
         for (String next : citiesToVisit) {
             amountOfPheromoneOnRoad = Math.pow(pheromoneLevel.get(fromCity).get(next), alpha);
-            valueOfRoad = Math.pow(1 / graphCost.get(fromCity).get(next), beta);
+            valueOfRoad = Math.pow(1/graphCost.get(fromCity).get(next), beta);
             numerator = amountOfPheromoneOnRoad * valueOfRoad;
             probability = numerator / denominator;
+
+            if (chances.size() != 0) {
+                probability += chances.get(chances.size() - 1);
+            }
             chances.add(probability);
         }
-
-        for (int i = 1; i < chances.size(); i++) {
-            chances.set(i, chances.get(i - 1) + chances.get(i));
-        }
-        chances.set(chances.size() - 1, 1.0);
+        chances.set(chances.size()-1, 1.1);
         return chances;
     }
 

@@ -3,11 +3,12 @@ package com.example.combinatorial_optimization.Algorithms.AntColonySystem;
 import com.example.combinatorial_optimization.Algorithms.Algorithm;
 import com.example.combinatorial_optimization.DataReader.Point;
 import com.example.combinatorial_optimization.DataReader.SetOfPoints;
+
 import com.example.combinatorial_optimization.Settings.Settings;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.time.LocalTime;
+import java.util.*;
+
 
 public class AntAlgorithm implements Algorithm, Settings {
 
@@ -53,18 +54,30 @@ public class AntAlgorithm implements Algorithm, Settings {
 
     @Override
     public void findRoad() {
-        for(int i = 1; i <= antColony; i++){
 
-            //progress
-            System.out.printf("Ant Colony algorithm progress : %.1f %c\n", i/antColony * 100, '%');
-            //
+        int startTime = LocalTime.now().toSecondOfDay();
 
-            createAnt();
-            pheromoneVaporization();
-            if(ant.getTotalLength() < totalLength){
-                totalLength = ant.getTotalLength();
-                finalRoad = ant.getAntRoad();
-            }
+        for (int j = 1; j <= amountOfTry; j++) {
+            for(int i = 1; i <= antColony; i++){
+
+                //progress
+                if(i/antColony*100 % 5 == 0) {
+                    System.out.printf("Ant Colony algorithm progress : %.1f %c  %d proba\n", i/antColony * 100, '%', j);
+                }
+
+                createAnt();
+                pheromoneVaporization();
+
+                if(ant.getTotalLength() < totalLength){
+                    totalLength = ant.getTotalLength();
+                    finalRoad = ant.getAntRoad();
+                }
+
+                // stop meta-heuristic after 5 minutes of working
+                if(LocalTime.now().toSecondOfDay() - startTime > 300){
+                    return;
+                }
+           }
         }
     }
 
